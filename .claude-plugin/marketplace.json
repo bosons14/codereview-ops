@@ -1,0 +1,17 @@
+{
+  "name": "codereview-ops",
+  "owner": {
+    "name": "Subhendra Basu",
+    "url": "https://github.com/bosons14"
+  },
+  "plugins": [
+    {
+      "name": "codereview-ops",
+      "source": "./",
+      "description": "Language-agnostic code review: scoped diffs, linter evidence, parallel reviewers, verified findings, security audit, SARIF/CI output."
+    }
+  ],
+  "metadata": {
+    "description": "Open-source, language-agnostic code review toolkit for Claude Code by Subhendra Basu."
+  }
+}

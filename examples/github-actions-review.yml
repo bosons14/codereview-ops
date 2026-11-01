@@ -1,0 +1,42 @@
+# Example: run codereview-ops headlessly on every pull request.
+# Copy to .github/workflows/codereview.yml in YOUR repository and add an ANTHROPIC_API_KEY secret.
+# Findings appear as inline annotations and in GitHub code scanning (SARIF); the job fails on
+# findings at/above `fail_on` from .codereview-ops.json (default: blocker).
+name: codereview-ops
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  security-events: write   # upload SARIF
+
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: Install Claude Code and codereview-ops
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          git clone --depth 1 https://github.com/bosons14/codereview-ops "$RUNNER_TEMP/codereview-ops"
+      - name: Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          claude -p "/codereview-ops:review --base origin/$BASE_REF --sarif codereview.sarif. Do not modify any files except in the codereview-ops workdir. Write findings.json and run report.py." \
+            --plugin-dir "$RUNNER_TEMP/codereview-ops" \
+            --allowedTools "Read,Grep,Glob,Write,Bash(python3:*),Bash(git:*),Agent" \
+            --output-format text
+      - name: Annotate and gate
+        if: always()
+        run: |
+          python3 "$RUNNER_TEMP/codereview-ops/scripts/report.py" .git/codereview-ops/findings.json \
+            --github-annotations --sarif codereview.sarif --quiet
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('codereview.sarif') != ''
+        with: { sarif_file: codereview.sarif, category: codereview-ops }

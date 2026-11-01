@@ -1,0 +1,13 @@
+{
+  "name": "codereview-ops",
+  "version": "0.1.0",
+  "description": "Language-agnostic code review for Claude Code: diff/branch/PR/full-repo scoping, language detection, installed-linter evidence, parallel independent reviewer agents, adversarial verification of findings, security audit, secret guard hook, and Markdown/SARIF/GitHub-annotation reports with a CI exit code.",
+  "author": {
+    "name": "Subhendra Basu",
+    "url": "https://github.com/bosons14"
+  },
+  "homepage": "https://github.com/bosons14/codereview-ops",
+  "repository": "https://github.com/bosons14/codereview-ops",
+  "license": "MIT",
+  "keywords": ["code-review", "review", "pull-request", "security", "static-analysis", "sarif", "linter", "language-agnostic", "ci"]
+}

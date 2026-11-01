@@ -1,0 +1,17 @@
+{
+  "description": "Scan every file Claude writes or edits for hard-coded secrets, in any language.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/secret_guard.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}

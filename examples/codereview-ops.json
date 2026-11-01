@@ -1,0 +1,9 @@
+{
+  "base": "origin/main",
+  "ignore": ["docs/generated/**", "**/*.snap"],
+  "min_severity": "minor",
+  "fail_on": "major",
+  "max_findings": 40,
+  "focus": ["security", "correctness"],
+  "linters": { "enabled": true, "disable": [], "timeout": 120 }
+}
